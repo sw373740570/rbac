@@ -1,0 +1,33 @@
+<#assign ctx=request.contextPath />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="${ctx}/assets/css/bootstrap.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="${ctx}/css/style.css"/>
+<link href="${ctx}/assets/css/codemirror.css" rel="stylesheet">
+<link rel="stylesheet" href="${ctx}/assets/css/ace.min.css" />
+<link rel="stylesheet" href="${ctx}/assets/css/font-awesome.min.css" />
+<!--[if IE 7]>
+<link rel="stylesheet" href="${ctx}/assets/css/font-awesome-ie7.min.css" />
+<![endif]-->
+<!--[if lte IE 8]>
+<link rel="stylesheet" href="${ctx}/assets/css/ace-ie.min.css" />
+<![endif]-->
+<script src="${ctx}/assets/js/jquery.min.js"></script>
+<!-- <![endif]-->
+<!--[if IE]>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<![endif]-->
+<!--[if !IE]> -->
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='${ctx}/assets/js/jquery-2.0.3.min.js'>"+"<"+"/script>");
+</script>
+<!-- <![endif]-->
+<!--[if IE]>
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='${ctx}/assets/js/jquery-1.10.2.min.js'>"+"<"+"/script>");
+</script>
+<![endif]-->
+<script type="text/javascript">
+    if("ontouchend" in document) document.write("<script src='${ctx}/assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+</script>
+<script src="${ctx}/assets/js/bootstrap.min.js"></script>
+<script src="${ctx}/assets/js/typeahead-bs2.min.js"></script>
