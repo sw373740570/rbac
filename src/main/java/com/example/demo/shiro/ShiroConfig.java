@@ -169,8 +169,8 @@ public class ShiroConfig {
         //自定义加载权限资源关系
         List<SysResource> resourceList = resourceService.findAll();
         for (SysResource resource : resourceList) {
-            if(StringUtil.isNotEmpty(resource.getUrl())) {
-                String permission = "perms[" + resource.getUrl() + "]";
+            if(StringUtil.isNotEmpty(resource.getPermission())) {
+                String permission = "perms[" + resource.getPermission() + "]";
                 filterChainDefinitionMap.put(resource.getUrl(),permission);
             }
         }

@@ -34,7 +34,7 @@ public class MyShiroRealm extends AuthorizingRealm {
         List<SysResource> resourceList = resourceService.getUserResources(map);
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
         for(SysResource resource : resourceList) {
-            authorizationInfo.addStringPermission(resource.getUrl());
+            authorizationInfo.addStringPermission(resource.getPermission());
         }
         return authorizationInfo;
     }
