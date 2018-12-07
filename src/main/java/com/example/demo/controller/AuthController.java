@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.common.Result;
+import com.example.demo.shiro.ShiroService;
 import com.example.demo.vo.LoginVO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
@@ -8,6 +9,7 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,6 +17,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class AuthController {
+
+    @Autowired
+    private ShiroService shiroService;
 
     @RequestMapping(value = {"/login","/"})
     public String login() {
@@ -24,6 +29,24 @@ public class AuthController {
     @RequestMapping(value = {"/index"})
     public String index() {
         return "index";
+    }
+
+    @RequestMapping(value = "/unauthorized")
+    public String unauthorized() {
+        return "403";
+    }
+
+    @RequestMapping(value = "/updatePermission")
+    @ResponseBody
+    public String updatePermission() {
+        try {
+            shiroService.updatePermission();
+            return "更新成功";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "更新失败";
+        }
+
     }
 
     @RequestMapping(value = "/doLogin", method = RequestMethod.POST)

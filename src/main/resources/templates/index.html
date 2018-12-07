@@ -76,6 +76,7 @@
                 var thisHeight = $("#nav_list").height($(window).outerHeight()-173);
                 $(".submenu").height();
                 $("#nav_list").children(".submenu").css("height",thisHeight);
+                return false;
             });
             //点击菜单跳转
             $(document).on('click','.iframeurl',function(){

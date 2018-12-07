@@ -2,7 +2,7 @@ package com.example.demo.shiro;
 
 import com.example.demo.entity.SysResource;
 import com.example.demo.service.ResourceService;
-import com.github.pagehelper.util.StringUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
@@ -153,10 +153,9 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setSecurityManager(securityManager);// 必须设置 SecurityManager
         shiroFilterFactoryBean.setLoginUrl("/login");// 如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面
         shiroFilterFactoryBean.setSuccessUrl("/index");// 登录成功后要跳转的链接
-        shiroFilterFactoryBean.setUnauthorizedUrl("/403");
+        shiroFilterFactoryBean.setUnauthorizedUrl("/unauthorized");
 
-        //拦截器.authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问
-
+        //修改filterChainDefinitionMap时，注意同时修改更新权限处
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
         filterChainDefinitionMap.put("/logout", "logout");//配置退出 过滤器,其中的具体的退出代码Shiro已经替我们实现了
         filterChainDefinitionMap.put("/doLogin","anon");
@@ -169,7 +168,7 @@ public class ShiroConfig {
         //自定义加载权限资源关系
         List<SysResource> resourceList = resourceService.findAll();
         for (SysResource resource : resourceList) {
-            if(StringUtil.isNotEmpty(resource.getPermission())) {
+            if(StringUtils.isNotEmpty(resource.getPermission())) {
                 String permission = "perms[" + resource.getPermission() + "]";
                 filterChainDefinitionMap.put(resource.getUrl(),permission);
             }
