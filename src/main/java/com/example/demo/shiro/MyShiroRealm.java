@@ -4,14 +4,14 @@ import com.example.demo.entity.SysResource;
 import com.example.demo.entity.SysUser;
 import com.example.demo.service.ResourceService;
 import com.example.demo.service.UserService;
+import com.example.demo.utils.JWTUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
-import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
@@ -25,6 +25,11 @@ public class MyShiroRealm extends AuthorizingRealm {
 
     @Autowired
     private ResourceService resourceService;
+
+    @Override
+    public boolean supports(AuthenticationToken token) {
+        return token instanceof JWTToken;
+    }
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
@@ -41,18 +46,24 @@ public class MyShiroRealm extends AuthorizingRealm {
 
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
-        String username = (String) authenticationToken.getPrincipal();
-        SysUser user = userService.findByUsername(username);
+        String token = (String) authenticationToken.getPrincipal();
+        if (StringUtils.isEmpty(token)){
+            throw new AuthenticationException("token invalid");
+        }
+        String username = JWTUtils.getUsername(token);
+        if (StringUtils.isEmpty(username)){
+            throw new AuthenticationException("token invalid");
+        }
+        SysUser user = userService.findByUsername(JWTUtils.getUsername(token));
         if(user == null) {
             throw new UnknownAccountException();
         }
         if (user.getStatus() == -1) {
             throw new LockedAccountException();
         }
-        SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(user,user.getPassword(),ByteSource.Util.bytes(username),getName());
-        Session session = SecurityUtils.getSubject().getSession();
-        session.setAttribute("userSession", user);
-        session.setAttribute("userSessionId", user.getId());
-        return authenticationInfo;
+        if (! JWTUtils.verify(token, username, user.getPassword())) {
+            throw new AuthenticationException("Username or password error");
+        }
+        return new SimpleAuthenticationInfo(user, token, getName());
     }
 }
