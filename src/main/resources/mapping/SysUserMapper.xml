@@ -93,6 +93,17 @@
       order by ${orderByClause}
     </if>
   </select>
+  <select id="selectOneByExample" resultMap="BaseResultMap" parameterType="com.example.demo.entity.SysUserExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from sys_user
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />

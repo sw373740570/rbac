@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <#include "/header.html">
+    <title>Title</title>
+    <script src="${ctx}/assets/js/jquery.validate.min.js"></script>
+    <style>
+        strong {
+            color: #ff0000;
+            padding-left: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="add_menber" id="add_menber_style">
+    <form id="edit_form">
+        <input type="hidden" id="id" name="id" value="${(user.id)!}">
+        <ul class="page-content">
+            <li><label class="label_name">用&nbsp;&nbsp;户 &nbsp;名：</label><span class="add_name"><input value="${(user.username)!}" name="username" type="text"  class="text_add" <#if (user.password)??>disabled</#if> /></span><strong>*</strong><div class="prompt r_f"></div></li>
+            <#if !(user.password)??>
+            <li><label class="label_name">密&nbsp;&nbsp;码：</label><span class="add_name"><input name="password" type="password" class="text_add"/><strong>*</strong></span><div class="prompt r_f"></div></li>
+            </#if>
+            <li><label class="label_name">真实姓名：</label><span class="add_name"><input name="name" value="${(user.name)!}" type="text" class="text_add"/><strong>*</strong></span><div class="prompt r_f"></div></li>
+            <li><label class="label_name">工&nbsp;&nbsp;号：</label><span class="add_name"><input name="code" value="${(user.code)!}" type="text"  class="text_add"/></span><div class="prompt r_f"></div></li>
+            <li><label class="label_name">电话号码：</label><span class="add_name"><input name="mobile" value="${(user.mobile)!}" type="text" class="text_add"/><strong>*</strong></span><div class="prompt r_f"></div></li>
+            <li><label class="label_name">电子邮箱：</label><span class="add_name"><input name="email" value="${(user.email)!}" type="text" class="text_add"/></span><div class="prompt r_f"></div></li>
+            <li style="width: 680px;"><label class="label_name">备注：</label><span class="add_name"><textarea name="remark" class="text_add" style="width: 550px;">${(user.remark)!}</textarea></span><div class="prompt r_f"></div></li>
+        </ul>
+    </form>
+</div>
+</body>
+<script type="application/javascript">
+    $(function () {
+        $("#edit_form").validate({
+            rules: {
+                username: "required",
+                password: {
+                    required: true,
+                    minlength: 6
+                },
+                name: "required",
+                mobile: "required",
+                email: "email"
+            },
+            messages: {
+                username: "用户名必须填写",
+                password: {
+                    required: "密码必须填写",
+                    minlength: "密码长度必须大于等于6位"
+                },
+                name: "姓名必须填写",
+                mobile: "电话号码必须填写",
+                email: "请填写正确的邮箱地址"
+            },
+            onfocusout: false,
+            onkeyup: false,
+            showErrors:function(errorMap,errorList) {
+                var errorStr = '';
+                $.each(errorList, function (i, n) {
+                    errorStr += n.message + "<br>";
+                });
+                parent.layer.alert(errorStr,{title: '提示框',icon:2});
+            }
+        });
+    })
+    function save() {
+        var res = null;
+        if($("#edit_form").valid()){
+            $.ajax({
+                type: "POST",
+                url: "${ctx}/user/save",
+                data: $("#edit_form").serialize(),
+                async: false,
+                success: function (result) {
+                    res = result;
+                }
+            })
+        }
+        return res;
+    }
+</script>
+</html>
